@@ -26,7 +26,7 @@ void Digit::setup(int o, int l, bool m)
 	bit_mask = 0;
 }
 
-void Digit::set(int number)
+void Digit::digit(int number)
 {
 	int i, state, loc;
 
@@ -61,14 +61,14 @@ void Digit::set(int number)
 	}
 }
 
-void Digit::set(float percentage)
+void Digit::digit(float percentage)
 {
 
 }
 
-void Digit::set_color(int r, int g, int b)
+void Digit::color(int r, int g, int b)
 {
-	color = lcd.Color(r, g, b);
+	rgb_color = lcd.Color(r, g, b);
 }
 
 void Digit::render()
@@ -81,8 +81,7 @@ void Digit::render()
 		state = bitRead(bit_mask, i);
 		if (state == 1)
 		{
-			Serial.println(offset+i);
-			lcd.setPixelColor(offset+i, color);
+			lcd.setPixelColor(offset+i, rgb_color);
 		}
 		else
 		{

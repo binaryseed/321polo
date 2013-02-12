@@ -1,15 +1,20 @@
 
 #include "LPD8806.h"
 #include <SPI.h>
+#include "Timer.h"
 
 #include "digit.h"
 
 LPD8806 lcd = LPD8806(56, 12, 13);
 
+Timer timer;
+
 Digit left = Digit(lcd);
 Digit right = Digit(lcd);
 
 int num = 0;
+
+int _renderEvent;
 
 void setup()
 {
@@ -20,19 +25,20 @@ void setup()
 	left.setup(28,28,true);
 
 	lcd.begin();
+
+	_renderEvent = timer.every(50, _render);
 }
 
 void loop()
 {
 
-	left.set(num);
-	right.set(num);
+	timer.update();
 
-	left.set_color( random(30),random(30),random(30) );
-	right.set_color( random(30),random(30),random(30) );
+	left.digit(num);
+	right.digit(num);
 
-	left.render();
-	right.render();
+	left.color( random(30),random(30),random(30) );
+	right.color( random(30),random(30),random(30) );
 
 	if (num == 9)
 	{
@@ -43,7 +49,12 @@ void loop()
 		num++;
 	}
 
-	delay(2000);
+	delay(1000);
 
 }
 
+void _render()
+{
+	left.render();
+	right.render();
+}
