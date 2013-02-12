@@ -5,9 +5,13 @@ class Digit
 {
 
 public:
-
 	Digit(LPD8806&);
 	void setup(int, int, bool);
+
+	void digit(int);
+	void digit(float);
+	void color(int, int, int);
+	void render();
 
 	LPD8806 lcd;
 	int pattern[10];
@@ -19,10 +23,5 @@ public:
 	unsigned long bit_mask;
 	uint32_t rgb_color;
 
-	void digit(int);
-	void digit(float);
 
-	void color(int, int, int);
-
-	void render();
 };
