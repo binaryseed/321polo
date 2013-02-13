@@ -1,6 +1,4 @@
 
-#include <Arduino.h>
-
 class Digit
 {
 
@@ -9,10 +7,12 @@ public:
 	void setup(int, int, bool);
 
 	void digit(int);
-	void digit(float);
+	void percentage(float);
 	void color(int, int, int);
 	void render();
 
+
+private:
 	LPD8806 lcd;
 	int pattern[10];
 
@@ -22,6 +22,4 @@ public:
 
 	unsigned long bit_mask;
 	uint32_t rgb_color;
-
-
 };

@@ -1,10 +1,12 @@
 
+#include <Arduino.h>
 #include "LPD8806.h"
 #include "digit.h"
 
-Digit::Digit(LPD8806& _lcd)
+#define CEIL(X) ((X-(int)(X)) > 0 ? (int)(X+1) : (int)(X))
+
+Digit::Digit(LPD8806& _lcd) : lcd(_lcd)
 {
-	lcd = _lcd;
 	pattern[0] = B11111100;
 	pattern[1] = B00011000;
 	pattern[2] = B01101110;
@@ -61,14 +63,24 @@ void Digit::digit(int number)
 	}
 }
 
-void Digit::digit(float percentage)
-{
-
-}
-
 void Digit::color(int r, int g, int b)
 {
-	rgb_color = lcd.Color(r, g, b);
+	rgb_color = lcd.Color(r, b, g);
+}
+
+void Digit::percentage(float percentage)
+{
+
+	int i, state;
+	int dist = CEIL(24*percentage);
+	Serial.println(24*percentage);
+	Serial.println(dist);
+
+	for (i=0; i<length; i++)
+	{
+		state = ((i<dist) ? 1 : 0);
+		bitWrite(bit_mask, 23-i, state);
+	}
 }
 
 void Digit::render()
