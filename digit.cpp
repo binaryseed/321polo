@@ -28,6 +28,11 @@ void Digit::setup(int o, int l, bool m)
 	bit_mask = 0;
 }
 
+void Digit::color(int r, int g, int b)
+{
+	rgb_color = lcd.Color(r, b, g);
+}
+
 void Digit::digit(int number)
 {
 	int i, state, loc;
@@ -37,25 +42,18 @@ void Digit::digit(int number)
 		loc = 4*i;
 		state = bitRead(pattern[number], 7-i);
 
-		if (mirrored == true)
-		// left LCD order is mirrored
+		if (mirrored) // left LCD order is mirrored
 		{
 			switch(i)
 			{
 				case 0:
-					loc = 4*4;
-					break;
 				case 1:
-					loc = 4*3;
-					break;
 				case 3:
-					loc = 4*1;
-					break;
 				case 4:
-					loc = 4*0;
-					break;
+					loc = 4*(4-i);
 			}
 		}
+
 		bitWrite(bit_mask, loc+0, state);
 		bitWrite(bit_mask, loc+1, state);
 		bitWrite(bit_mask, loc+2, state);
@@ -63,23 +61,18 @@ void Digit::digit(int number)
 	}
 }
 
-void Digit::color(int r, int g, int b)
-{
-	rgb_color = lcd.Color(r, b, g);
-}
-
 void Digit::percentage(float percentage)
 {
 
-	int i, state;
+	int i, loc, state;
 	int dist = CEIL(24*percentage);
-	Serial.println(24*percentage);
-	Serial.println(dist);
 
 	for (i=0; i<length; i++)
 	{
 		state = ((i<dist) ? 1 : 0);
-		bitWrite(bit_mask, 23-i, state);
+		loc = ((mirrored==true) ? i : 23-i);
+
+		bitWrite(bit_mask, loc, state);
 	}
 }
 
@@ -87,18 +80,14 @@ void Digit::render()
 {
 
 	int i, state;
+	uint32_t color;
 
 	for (i=0; i<length; i++)
 	{
 		state = bitRead(bit_mask, i);
-		if (state == 1)
-		{
-			lcd.setPixelColor(offset+i, rgb_color);
-		}
-		else
-		{
-			lcd.setPixelColor(offset+i, lcd.Color(0,0,0));
-		}
+		color = ((state==1) ? rgb_color : lcd.Color(0,0,0));
+
+		lcd.setPixelColor(offset+i, color);
 	}
 	lcd.show();
 

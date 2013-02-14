@@ -13,7 +13,7 @@ public:
 
 
 private:
-	LPD8806 lcd;
+	LPD8806& lcd;
 	int pattern[10];
 
 	int offset;
