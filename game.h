@@ -12,8 +12,13 @@ public:
 	void toggle();
 	void process();
 
+	void onFinish(void (*callback)());
+
 private:
+	void (*callback)();
+
 	void bump();
+	void showTime(int, int);
 
 	int mins();
 	int secs();
@@ -23,7 +28,7 @@ private:
 
 	bool started, playing, final;
 	int duration;
-	int remaining_seconds;
+	int remaining_seconds, finished_at;
 	int last_state, current_state;
 
 	int left_goals, right_goals;

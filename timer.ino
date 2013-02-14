@@ -7,7 +7,11 @@
 #include "digit.h"
 #include "game.h"
 
-int _renderEvent, _tickEvent;
+#define EVEN( _x ) ( _x & 1 ? false : true )
+
+int fps = 30;
+int buttonPin = 15;
+int tonePin = 21;
 
 	// http://github.com/adafruit/LPD8806
 LPD8806 lcd(56, 12, 13);
@@ -16,7 +20,7 @@ LPD8806 lcd(56, 12, 13);
 Timer timer;
 
 	// http://playground.arduino.cc/Code/Button
-Button button(15, BUTTON_PULLDOWN, true, 50);
+Button button(buttonPin, BUTTON_PULLDOWN, true, 50);
 
 Digit left(lcd);
 Digit right(lcd);
@@ -32,21 +36,22 @@ void setup()
 	left.setup(28,28,true);
 	lcd.begin();
 
-	_renderEvent = timer.every(100, _render);
-	_tickEvent = timer.every(1000, _tick);
+	timer.every(1000/fps, _render);
+	timer.every(1000, _tick);
 
-	pinMode(15, INPUT);
-	button.pressHandler(_buttonPress);
-	button.holdHandler(_buttonHold, 1000);
+	pinMode(buttonPin, INPUT);
+	button.pressHandler(_pressButton);
+	button.releaseHandler(_releaseButton);
+	button.holdHandler(_holdButton, 1000);
 
-	game.setup(10);
+	game.setup(1);
 }
 
 void loop()
 {
 	timer.update();
-	button.process();
 	game.process();
+	button.process();
 }
 
 void _render()
@@ -60,25 +65,122 @@ void _tick()
 	game.tick();
 }
 
-void _buttonPress(Button& b)
+void _pressButton(Button& b)
+{
+	beep();
+}
+
+void _releaseButton(Button& b)
 {
 	game.toggle();
 }
 
-void _buttonHold(Button& b)
+void _holdButton(Button& b)
 {
+	beep(500);
 	game.reset();
 
-	Serial.println("--[countdown");
-	int wait = (10 + int(random(5)))*1000;
-	wait = 1;
-	Serial.println(wait);
+	int wait = 1000 * (15 + random(10));
+	wait = 9000;
 
-	timer.after(wait, gamestart);
+	timer.after(wait-4000, pulseRed);
+	timer.after(wait-3000, pulseOrange);
+	timer.after(wait-2000, pulseYellow);
+	timer.after(wait-1000, pulseGreen);
+	timer.after(wait, playPolo);
+
+	pulseWhite((wait/1000)-4);
+}
+
+void playPolo()
+{
+	silence();
+	game.start();
+	game.onFinish(gameOver);
+}
+
+void gameOver()
+{
+	beep(3000);
 }
 
 
-void gamestart()
+
+// Sound
+//
+
+void beep() { beep(200); }
+
+void beep(int duration)
 {
-	game.start();
+	tone(tonePin, 3000+random(50));
+	timer.after(duration, silence);
+}
+
+void silence() { noTone(tonePin); }
+
+
+
+// Pulse
+//
+
+int pulseR, pulseG, pulseB, pulseStart;
+
+void pulseRed()
+{
+	noTone(tonePin);
+	tone(tonePin, 2000);
+	pulseSolid(127, 0, 0);
+}
+void pulseOrange()
+{
+	noTone(tonePin);
+	tone(tonePin, 2001);
+	pulseSolid(127, 10, 0);
+}
+void pulseYellow()
+{
+	noTone(tonePin);
+	tone(tonePin, 2002);
+	pulseSolid(127, 70, 0);
+}
+void pulseGreen()
+{
+	noTone(tonePin);
+	tone(tonePin, 2500);
+	pulseSolid(0, 127, 0);
+}
+void pulseWhite(int duration)
+{
+	pulseSolid(100,100,100,duration);
+}
+
+void pulseSolid(int r, int g, int b) { pulseSolid(r, g, b, 1); }
+
+void pulseSolid(int r, int g, int b, int duration)
+{
+	pulseR = r;
+	pulseG = g;
+	pulseB = b;
+
+	timer.every(1000/fps, pulseFrame, fps*duration);
+	pulseStart = millis();
+}
+
+void pulseFrame()
+{
+	int elapsed = millis() - pulseStart;
+	float portion = (elapsed % 1000) / 1000.0;
+
+	if (portion > .6) { noTone(tonePin); }
+
+	int r = int(pulseR * portion);
+	int g = int(pulseG * portion);
+	int b = int(pulseB * portion);
+
+	left.digit(8);
+	right.digit(8);
+
+	left.color(r,g,b);
+	right.color(r,g,b);
 }
