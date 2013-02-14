@@ -7,8 +7,6 @@
 #include "digit.h"
 #include "game.h"
 
-#define EVEN( _x ) ( _x & 1 ? false : true )
-
 int fps = 30;
 int buttonPin = 15;
 int tonePin = 21;
@@ -44,7 +42,7 @@ void setup()
 	button.releaseHandler(_releaseButton);
 	button.holdHandler(_holdButton, 1000);
 
-	game.setup(1);
+	game.setup(15);
 }
 
 void loop()
@@ -81,7 +79,6 @@ void _holdButton(Button& b)
 	game.reset();
 
 	int wait = 1000 * (15 + random(10));
-	wait = 9000;
 
 	timer.after(wait-4000, pulseRed);
 	timer.after(wait-3000, pulseOrange);
@@ -136,7 +133,7 @@ void pulseOrange()
 {
 	noTone(tonePin);
 	tone(tonePin, 2001);
-	pulseSolid(127, 10, 0);
+	pulseSolid(127, 20, 0);
 }
 void pulseYellow()
 {
@@ -152,7 +149,7 @@ void pulseGreen()
 }
 void pulseWhite(int duration)
 {
-	pulseSolid(100,100,100,duration);
+	pulseSolid(50,50,50,duration);
 }
 
 void pulseSolid(int r, int g, int b) { pulseSolid(r, g, b, 1); }
