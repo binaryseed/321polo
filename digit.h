@@ -11,7 +11,6 @@ public:
 	void color(int, int, int);
 	void render();
 
-
 private:
 	LPD8806& lcd;
 	int pattern[10];

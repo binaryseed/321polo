@@ -1,16 +1,17 @@
 
 #include <Arduino.h>
-#include "LPD8806.h"
-#include "Timer.h"
+#include <LPD8806.h>
+#include <Timer.h>
+
+#include "timer.h"
 #include "digit.h"
 #include "game.h"
-
-#define EVEN( _x ) ( _x & 1 ? false : true )
 
 Game::Game(Digit& l, Digit& r) : left(l), right(r) {}
 
 void Game::setup(int _duration)
 {
+	length = _duration;
 	duration = _duration * 60;
 	reset();
 }

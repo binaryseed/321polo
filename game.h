@@ -12,6 +12,8 @@ public:
 	void toggle();
 	void process();
 
+	int length;
+	int duration;
 	void onFinish(void (*callback)());
 
 private:
@@ -27,7 +29,6 @@ private:
 	Digit& right;
 
 	bool started, playing, final;
-	int duration;
 	int remaining_seconds, finished_at;
 	int last_state, current_state;
 

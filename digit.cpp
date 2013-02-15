@@ -1,9 +1,9 @@
 
 #include <Arduino.h>
-#include "LPD8806.h"
-#include "digit.h"
+#include <LPD8806.h>
 
-#define CEIL(X) ((X-(int)(X)) > 0 ? (int)(X+1) : (int)(X))
+#include "timer.h"
+#include "digit.h"
 
 Digit::Digit(LPD8806& _lcd) : lcd(_lcd)
 {
