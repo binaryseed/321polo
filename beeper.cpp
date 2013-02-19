@@ -43,10 +43,10 @@ void Beeper::now(float _d, int _f)
 	after(0, _d, _f);
 }
 
-void Beeper::after(int _w, float _d, int _f)
+void Beeper::after(float _w, float _d, int _f)
 {
 	int now = millis();
-	int start = now + _w*1000;
+	int start = now + int(_w*1000);
 	int end = start + int(_d*1000);
 
 	queue(start, end, freq(_f) );

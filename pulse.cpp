@@ -22,29 +22,27 @@ int Pulser::nextPulseIndex()
 	return -1;
 }
 
-void Pulser::now(int r,int g,int b, int dur)
+void Pulser::now(char _rgb[], int dur)
 {
-	queue(0, r,g,b, dur, 88);
+	queue(0, _rgb, dur, 88);
 }
-void Pulser::after(int start, int r,int g,int b)
+void Pulser::after(int start, char _rgb[])
 {
-	queue(start, r,g,b, 1, 88);
+	queue(start, _rgb, 1, 88);
 }
-void Pulser::display(int num, int r,int g,int b, int dur)
+void Pulser::display(int num, char _rgb[], int dur)
 {
-	queue(0, r,g,b, dur, num);
+	queue(0, _rgb, dur, num);
 }
 
-void Pulser::queue(int start, int r,int g,int b, int dur, int num)
+void Pulser::queue(int start, char _rgb[], int dur, int num)
 {
 
 	int i = nextPulseIndex();
 	if (i == -1) return;
 
 	pulses[i].active = true;
-	pulses[i].colorR = r;
-	pulses[i].colorG = g;
-	pulses[i].colorB = b;
+	pulses[i].color = _rgb;
 	pulses[i].start_at = millis()+start*1000;
 	pulses[i].end_at = millis()+(start+dur)*1000;
 	pulses[i].pulse_num = num;
@@ -73,16 +71,11 @@ void Pulse::process(Pulser* pulser)
 	if(now >= end_at) { active = false; return; }
 
 	int elapsed = (now - start_at) % pulse_len;
-	float portion = ease(elapsed, pulse_len);
-
-	int r = int(colorR*portion);
-	int g = int(colorG*portion);
-	int b = int(colorB*portion);
+	float easing = ease(elapsed, pulse_len);
 
 	pulser->left.digit(pulse_num / 10);
 	pulser->right.digit(pulse_num % 10);
 
-	pulser->left.color(r,g,b);
-	pulser->right.color(r,g,b);
-
+	pulser->left.color(color, easing);
+	pulser->right.color(color, easing);
 }

@@ -88,31 +88,31 @@ void _holdButton(Button& b)
 
 	int wait = (15 + random(5));
 
-	pulser.now(90,90,90, wait-4);
+	pulser.now("666", wait);
 
-	timer.after((wait-4)*1000, threeTwoOne);
+	timer.after(wait*1000, threeTwoOne);
 }
 
 void threeTwoOne()
 {
-	pulser.after(0, 127,0,0);
-	beeper.after(0, .5, 2000);
+	pulser.after(0, "f00");
+	beeper.after(0.0, .5, 2000);
 
-	pulser.after(1, 127,20,0);
-	beeper.after(1, .5, 2000);
+	pulser.after(1, "f30");
+	beeper.after(1.0, .5, 2000);
 
-	pulser.after(2, 127,70,0);
-	beeper.after(2, .5, 2000);
+	pulser.after(2, "f90");
+	beeper.after(2.0, .5, 2000);
 
-	pulser.after(3, 0,127,0);
-	beeper.after(3, 1.0, 2500);
+	pulser.after(3, "0f0");
+	beeper.after(3.0, 1.0, 2500);
 
 	timer.after(4000, playPolo);
 }
 
 void playPolo()
 {
-	pulser.display(game.length, 0,127,0, 4);
+	pulser.display(game.length, "0f0", 4);
 
 	game.start();
 	game.onFinish(gameOver);
@@ -122,6 +122,6 @@ void gameOver()
 {
 	beeper.now(2.0, 2000);
 
-	// pulser.display(score, 50,50,50, 5);
+	// pulser.display(score, "666", 5);
 }
 

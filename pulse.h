@@ -12,9 +12,7 @@ public:
 
 	bool active;
 
-	int colorR;
-	int colorG;
-	int colorB;
+	char* color;
 
 	int start_at;
 	int end_at;
@@ -28,9 +26,9 @@ class Pulser
 public:
 	Pulser(Digit&, Digit&);
 
-	void now       (int,int,int,int);
-	void after     (int,int,int,int);
-	void display   (int,int,int,int,int);
+	void now       (char*,int);
+	void after     (int,char*);
+	void display   (int,char*,int);
 
 	Digit& left;
 	Digit& right;
@@ -41,5 +39,5 @@ public:
 private:
 	Pulse pulses[MAX_PULSES];
 
-	void queue(int,int,int,int,int,int);
+	void queue(int,char*,int,int);
 };

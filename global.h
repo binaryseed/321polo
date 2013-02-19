@@ -1,5 +1,5 @@
 
-#define FPS 30
+#define FPS 20
 #define BUTTON_PIN 15
 #define TONE_PIN 21
 
@@ -7,3 +7,6 @@
 #define EVEN( _x ) ( _x & 1 ? false : true )
 
 float ease(int, int);
+
+uint32_t _color(char[], float=1.0);
+int from_hex(char);

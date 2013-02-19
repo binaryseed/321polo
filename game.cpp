@@ -97,32 +97,42 @@ void Game::showTime(int m, int s)
 	}
 
 	// Left Color
-	if (m > 10)
+	// if (m >= 10)
+	// {
+	// 	left.color(0,0,127);
+	// }
+	// else if ( m >= 1)
+	// {
+	// 	left.color(70,70,70);
+	// }
+	// else
+	// {
+	// 	left.color(127,20,0);
+	// }
+	if (m >= 1 && m < 10)
 	{
-		left.color(0,127,0);
-	}
-	else if ( m >= 1)
-	{
-		left.color(10,10,10);
+		left.color("00f");
 	}
 	else
 	{
-		left.color(127,0,0);
+		left.color("f00");
 	}
 
 	// Right Color
-	if (m >= 5)
-	{
-		right.color(0,127,0);
-	}
-	else if (m >= 3)
-	{
-		right.color(127,127,0);
-	}
-	else
-	{
-		right.color(127,0,0);
-	}
+	// if (m >= 10)
+	// {
+	// 	right.color(0,0,127);
+	// }
+	// else if (m >= 5)
+	// {
+	// 	right.color(0,127,0);
+	// }
+	// else
+	// {
+	// 	right.color(127,20,0);
+	// }
+	right.color("f00");
+
 }
 
 void Game::process()
@@ -142,28 +152,28 @@ void Game::process()
 	if (started && !playing) // paused
 	{
 		int now = millis();
-		float portion = ease(now % 1000, 1000);
+		float easing = ease(now % 1000, 1000);
 
 		showTime(11,0);
 
 		// pulse out after pulsing in
-		if ( EVEN(now / 1000) ) { portion = 1.0-portion; }
+		if ( EVEN(now / 1000) ) { easing = 1.0-easing; }
 
-		left.color(80*portion,0,0);
-		right.color(80*portion,0,0);
+		left.color("800", easing);
+		right.color("800", easing);
 	}
 
 	if (final)
 	{
 		int elapsed = millis() - finished_at;
-		float portion = ease(elapsed % 1000, 1000);
+		float easing = ease(elapsed % 1000, 1000);
 
 		elapsed = elapsed / 1000;
 		showTime(elapsed / 60, elapsed % 60);
 
-		left.color(127*portion,0,0);
-		if (elapsed >= 60) { left.color(90,90,90); }
-		right.color(127*portion,0,0);
+		left.color("f00", easing);
+		if (elapsed >= 60) { left.color("999"); }
+		right.color("f00", easing);
 	}
 
 }

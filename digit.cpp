@@ -28,9 +28,9 @@ void Digit::setup(int o, int l, bool m)
 	bit_mask = 0;
 }
 
-void Digit::color(int r, int g, int b)
+void Digit::color(char _rgb[], float easing)
 {
-	rgb_color = lcd.Color(r, b, g);
+	rgb_color = _color(_rgb, easing);
 }
 
 void Digit::digit(int number)

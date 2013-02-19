@@ -31,7 +31,7 @@ public:
 	int freq(int);
 
 	void now(float, int);
-	void after(int, float, int);
+	void after(float, float, int);
 	void shh();
 
 private:

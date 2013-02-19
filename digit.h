@@ -8,7 +8,7 @@ public:
 
 	void digit(int);
 	void percentage(float);
-	void color(int, int, int);
+	void color(char*, float=1.0);
 	void render();
 
 private:
