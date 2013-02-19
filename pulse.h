@@ -19,7 +19,6 @@ public:
 	int start_at;
 	int end_at;
 
-	int tone;
 	int pulse_num;
 	int pulse_len;
 };
@@ -30,11 +29,8 @@ public:
 	Pulser(Digit&, Digit&);
 
 	void now       (int,int,int,int);
-	void countdown (int,int,int,int,int);
-	void display   (int,int,int,int,int,int);
-
-	void playTone(int);
-	void stopTone();
+	void after     (int,int,int,int);
+	void display   (int,int,int,int,int);
 
 	Digit& left;
 	Digit& right;
@@ -45,5 +41,5 @@ public:
 private:
 	Pulse pulses[MAX_PULSES];
 
-	void queue(int,int,int,int,int,int,int);
+	void queue(int,int,int,int,int,int);
 };

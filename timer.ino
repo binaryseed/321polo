@@ -8,6 +8,7 @@
 #include "digit.h"
 #include "game.h"
 #include "pulse.h"
+#include "beeper.h"
 
 
 	// http://github.com/adafruit/LPD8806
@@ -27,6 +28,8 @@ Game game(left, right);
 
 Pulser pulser(left, right);
 
+Beeper beeper(TONE_PIN);
+
 
 void setup()
 {
@@ -42,7 +45,7 @@ void setup()
 	pinMode(BUTTON_PIN, INPUT);
 	button.pressHandler(_pressButton);
 	button.releaseHandler(_releaseButton);
-	button.holdHandler(_holdButton, 2000);
+	button.holdHandler(_holdButton, 1500);
 
 	game.setup(15);
 }
@@ -54,6 +57,7 @@ void loop()
 
 	game.process();
 	pulser.process();
+	beeper.process();
 }
 
 void _render()
@@ -69,7 +73,7 @@ void _tick()
 
 void _pressButton(Button& b)
 {
-	beep();
+	beeper.now(.2, 3000);
 }
 
 void _releaseButton(Button& b)
@@ -79,48 +83,45 @@ void _releaseButton(Button& b)
 
 void _holdButton(Button& b)
 {
-	beep(500);
+	beeper.now(.5, 3000);
 	game.reset();
 
-	int wait = (10 + random(10));
+	int wait = (15 + random(5));
 
-	pulser.now(50,50,50, wait-4);
+	pulser.now(90,90,90, wait-4);
 
-	pulser.countdown(wait-4, 127,0,0,  3);
-	pulser.countdown(wait-3, 127,20,0, 2);
-	pulser.countdown(wait-2, 127,70,0, 1);
-	pulser.countdown(wait-1, 0,127,0,  0);
+	timer.after((wait-4)*1000, threeTwoOne);
+}
 
-	pulser.display(game.length, wait, 50,50,50, 4);
+void threeTwoOne()
+{
+	pulser.after(0, 127,0,0);
+	beeper.after(0, .5, 2000);
 
-	timer.after(wait*1000, playPolo);
+	pulser.after(1, 127,20,0);
+	beeper.after(1, .5, 2000);
+
+	pulser.after(2, 127,70,0);
+	beeper.after(2, .5, 2000);
+
+	pulser.after(3, 0,127,0);
+	beeper.after(3, 1.0, 2500);
+
+	timer.after(4000, playPolo);
 }
 
 void playPolo()
 {
-	silence();
+	pulser.display(game.length, 0,127,0, 4);
+
 	game.start();
 	game.onFinish(gameOver);
 }
 
 void gameOver()
 {
-	beep(3000);
+	beeper.now(2.0, 2000);
 
-	// pulser.display(score, 0, 50,50,50, 5);
+	// pulser.display(score, 50,50,50, 5);
 }
 
-
-
-// Sound
-//
-
-	void beep() { beep(200); }
-
-	void beep(int duration)
-	{
-		tone(TONE_PIN, 3000+random(50));
-		timer.after(duration, silence);
-	}
-
-	void silence() { noTone(TONE_PIN); }

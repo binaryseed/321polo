@@ -24,25 +24,24 @@ int Pulser::nextPulseIndex()
 
 void Pulser::now(int r,int g,int b, int dur)
 {
-	queue(0, r,g,b, dur, 88, -1);
+	queue(0, r,g,b, dur, 88);
 }
-void Pulser::countdown(int start, int r,int g,int b, int tone)
+void Pulser::after(int start, int r,int g,int b)
 {
-	queue(start, r,g,b, 1, 88, tone);
+	queue(start, r,g,b, 1, 88);
 }
-void Pulser::display(int num, int start, int r,int g,int b, int dur)
+void Pulser::display(int num, int r,int g,int b, int dur)
 {
-	queue(start, r,g,b, dur, num, -1);
+	queue(0, r,g,b, dur, num);
 }
 
-void Pulser::queue(int start, int r,int g,int b, int dur, int num, int tone)
+void Pulser::queue(int start, int r,int g,int b, int dur, int num)
 {
 
 	int i = nextPulseIndex();
 	if (i == -1) return;
 
 	pulses[i].active = true;
-	pulses[i].tone = tone;
 	pulses[i].colorR = r;
 	pulses[i].colorG = g;
 	pulses[i].colorB = b;
@@ -76,12 +75,6 @@ void Pulse::process(Pulser* pulser)
 	int elapsed = (now - start_at) % pulse_len;
 	float portion = ease(elapsed, pulse_len);
 
-	if (tone >= 0)
-	{
-		if (portion > .1) { pulser->playTone(tone); }
-		if (portion < .1) { pulser->stopTone(); }
-	}
-
 	int r = int(colorR*portion);
 	int g = int(colorG*portion);
 	int b = int(colorB*portion);
@@ -92,24 +85,4 @@ void Pulse::process(Pulser* pulser)
 	pulser->left.color(r,g,b);
 	pulser->right.color(r,g,b);
 
-}
-
-void Pulser::playTone(int _tone)
-{
-	switch(_tone)
-	{
-		case 3:
-		case 2:
-		case 1:
-			tone(TONE_PIN, 2000+_tone);
-			break;
-		case 0:
-			tone(TONE_PIN, 2500);
-			break;
-	}
-}
-
-void Pulser::stopTone()
-{
-	noTone(TONE_PIN);
 }
