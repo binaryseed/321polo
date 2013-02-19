@@ -5,3 +5,5 @@
 
 #define CEIL(X) ((X-(int)(X)) > 0 ? (int)(X+1) : (int)(X))
 #define EVEN( _x ) ( _x & 1 ? false : true )
+
+float ease(int, int);

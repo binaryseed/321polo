@@ -2,7 +2,7 @@
 #include <Arduino.h>
 #include <LPD8806.h>
 
-#include "timer.h"
+#include "global.h"
 #include "digit.h"
 #include "pulse.h"
 
@@ -73,11 +73,14 @@ void Pulse::process(Pulser* pulser)
 	if(now < start_at) { return; }
 	if(now >= end_at) { active = false; return; }
 
-	int elapsed = now - start_at;
-	float portion = (elapsed % pulse_len) / float(pulse_len);
+	int elapsed = (now - start_at) % pulse_len;
+	float portion = ease(elapsed, pulse_len);
 
-	if (portion < .6) { pulser->playTone(tone); }
-	if (portion > .6) { pulser->stopTone(); }
+	if (tone >= 0)
+	{
+		if (portion > .1) { pulser->playTone(tone); }
+		if (portion < .1) { pulser->stopTone(); }
+	}
 
 	int r = int(colorR*portion);
 	int g = int(colorG*portion);

@@ -4,7 +4,7 @@
 #include <Timer.h>
 #include <Button.h>
 
-#include "timer.h"
+#include "global.h"
 #include "digit.h"
 #include "game.h"
 #include "pulse.h"

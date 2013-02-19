@@ -2,7 +2,7 @@
 #include <Arduino.h>
 #include <LPD8806.h>
 
-#include "timer.h"
+#include "global.h"
 #include "digit.h"
 
 Digit::Digit(LPD8806& _lcd) : lcd(_lcd)

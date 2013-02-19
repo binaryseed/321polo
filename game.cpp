@@ -3,7 +3,7 @@
 #include <LPD8806.h>
 #include <Timer.h>
 
-#include "timer.h"
+#include "global.h"
 #include "digit.h"
 #include "game.h"
 
@@ -141,11 +141,13 @@ void Game::process()
 
 	if (started && !playing) // paused
 	{
-		float portion = (millis() % 1000) / 1000.0;
+		int now = millis();
+		float portion = ease(now % 1000, 1000);
 
 		showTime(11,0);
 
-		if ( EVEN(millis()/1000) ) { portion = 1.0-portion; }
+		// pulse out after pulsing in
+		if ( EVEN(now / 1000) ) { portion = 1.0-portion; }
 
 		left.color(80*portion,0,0);
 		right.color(80*portion,0,0);
@@ -154,13 +156,13 @@ void Game::process()
 	if (final)
 	{
 		int elapsed = millis() - finished_at;
-		float portion = (elapsed % 1000) / 1000.0;
-		elapsed = elapsed / 1000;
+		float portion = ease(elapsed % 1000, 1000);
 
+		elapsed = elapsed / 1000;
 		showTime(elapsed / 60, elapsed % 60);
 
 		left.color(127*portion,0,0);
-		if (elapsed >= 60) { left.color(10,10,10); }
+		if (elapsed >= 60) { left.color(90,90,90); }
 		right.color(127*portion,0,0);
 	}
 
