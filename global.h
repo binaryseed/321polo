@@ -6,6 +6,8 @@
 #define CEIL(X) ((X-(int)(X)) > 0 ? (int)(X+1) : (int)(X))
 #define EVEN( _x ) ( _x & 1 ? false : true )
 
+#define LEN(x) (sizeof(x) / sizeof(x[0]))
+
 float ease(int, int);
 
 uint32_t _color(char[], float=1.0);

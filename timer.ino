@@ -30,6 +30,9 @@ Pulser pulser(left, right);
 
 Beeper beeper(TONE_PIN);
 
+int t = 2;
+int times[] = {10, 12, 15, 20, 30, 45, 50, 60};
+bool time_set = false;
 
 void setup()
 {
@@ -48,6 +51,7 @@ void setup()
 	button.holdHandler(_holdButton, 1500);
 
 	game.setup(15);
+	pulser.display(game.length, "0f0", 1);
 }
 
 void loop()
@@ -78,15 +82,26 @@ void _pressButton(Button& b)
 
 void _releaseButton(Button& b)
 {
-	game.toggle();
+	if(!time_set)
+	{
+		game.setup( times[++t % LEN(times)] );
+		pulser.display(game.length, "0f0", 1);
+	}
+	else
+	{
+		game.toggle();
+	}
+
 }
 
 void _holdButton(Button& b)
 {
 	beeper.now(.5, 3000);
-	game.reset();
 
-	int wait = (15 + random(5));
+	game.reset();
+	time_set = true;
+
+	int wait = (5 + random(5));
 
 	pulser.now("666", wait);
 
@@ -120,7 +135,7 @@ void playPolo()
 
 void gameOver()
 {
-	beeper.now(2.0, 2000);
+	beeper.now(3.0, 2000);
 
 	// pulser.display(score, "666", 5);
 }
