@@ -96,19 +96,6 @@ void Game::showTime(int m, int s)
 		right.digit(s % 10);
 	}
 
-	// Left Color
-	// if (m >= 10)
-	// {
-	// 	left.color(0,0,127);
-	// }
-	// else if ( m >= 1)
-	// {
-	// 	left.color(70,70,70);
-	// }
-	// else
-	// {
-	// 	left.color(127,20,0);
-	// }
 	if (m >= 1 && m < 10)
 	{
 		left.color("00f");
@@ -118,19 +105,6 @@ void Game::showTime(int m, int s)
 		left.color("f00");
 	}
 
-	// Right Color
-	// if (m >= 10)
-	// {
-	// 	right.color(0,0,127);
-	// }
-	// else if (m >= 5)
-	// {
-	// 	right.color(0,127,0);
-	// }
-	// else
-	// {
-	// 	right.color(127,20,0);
-	// }
 	right.color("f00");
 
 }
